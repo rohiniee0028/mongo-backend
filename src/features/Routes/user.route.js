@@ -6,22 +6,21 @@ const UserModel = require("../Models/user.model");
 const userRouter = express.Router();
 
 userRouter.post("/signup", async (req, res) => {
-  console.log(req.body);
-  try {
-    const {email, password } = req.body;
+  const {email, password } = req.body;
+  const passHash = bcrypt.hashSync(password,10);
+  try {  
     let oldUser = await UserModel.findOne({ email });
     if (oldUser) {
-      return res.send({ msg: "already" });
+      return res.send({ msg: "User already exists" });
     }
-    // bycrypt.hash(password, 4, async function (err, hash) {
-    const user = new UserModel({email, password });
-    await user.save();
-    res.send({ msg: "successfully signedup" });
-    // });
+    const newUser = new UserModel({email, password : passHash });
+    await newUser.save();
+    return res.send({ msg: "successfully signedup" });
   } catch (e) {
-    res.send(e.message);
+      return res.send(e.message);
   }
 });
+
 userRouter.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
