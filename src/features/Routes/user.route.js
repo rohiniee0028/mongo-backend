@@ -27,7 +27,7 @@ userRouter.post("/login", async (req, res) => {
     const verify = bcrypt.compareSync(password,user.password);
     if (verify) {
        const token = await jwt.sign({email},"secret");
-       return res.send({token:token,success:1})
+       return res.send({token:token,success:"success"})
       } else {
         return res.send("Invalid Username or Password");
       }
