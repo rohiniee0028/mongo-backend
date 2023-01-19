@@ -8,15 +8,15 @@ const userRouter = express.Router();
 userRouter.post("/signup", async (req, res) => {
   console.log(req.body);
   try {
-    const { username, email, password } = req.body;
+    const {email, password } = req.body;
     let oldUser = await UserModel.findOne({ email });
     if (oldUser) {
       return res.send({ msg: "already" });
     }
     // bycrypt.hash(password, 4, async function (err, hash) {
-    const user = new UserModel({ username, email, password });
+    const user = new UserModel({email, password });
     await user.save();
-    res.send({ msg: "success" });
+    res.send({ msg: "successfully signedup" });
     // });
   } catch (e) {
     res.send(e.message);
