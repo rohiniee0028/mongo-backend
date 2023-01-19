@@ -6,6 +6,7 @@ const userRoute = require("./src/features/Routes/user.route");
 const menRoute = require("./src/features/Routes/men.route");
 const cartRoute = require("./src/features/Routes/cart.route");
 const app = express();
+const PORT = process.env.PORT;
 app.use(
   cors({
     origin: "*",
@@ -19,7 +20,7 @@ app.use("/cart", cartRoute);
 app.get("/", (req, res) => {
   res.send("Hello");
 });
-app.listen(8080, async () => {
+app.listen(PORT, async () => {
   await connect();
-  console.log("Listening on at http://localhost:8080");
+  console.log(`Listening on at http://localhost:${PORT}`);
 });
