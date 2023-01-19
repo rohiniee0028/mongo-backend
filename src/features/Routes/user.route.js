@@ -9,10 +9,10 @@ userRouter.post("/signup", async (req, res) => {
   const {email, password } = req.body;
   const passHash = bcrypt.hashSync(password,10);
   try {  
-    let oldUser = await UserModel.findOne({ email });
-    if (oldUser) {
-      return res.send({ msg: "User already exists" });
-    }
+    // let oldUser = await UserModel.findOne({ email });
+    // if (oldUser) {
+    //   return res.send({ msg: "User already exists" });
+    // }
     const newUser = new UserModel({email, password : passHash });
     await newUser.save();
     return res.send({ msg: "successfully signedup" });
