@@ -1,7 +1,5 @@
 const express = require("express");
 const bcrypt = require('bcrypt');
-
-// const UserSchema = require("../Models/user.model");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../Models/user.model");
 const userRouter = express.Router();
@@ -16,31 +14,25 @@ userRouter.post("/signup", async (req, res) => {
     // }
     const newUser = new UserModel({email, password : passHash });
     await newUser.save();
-    return res.send({ msg: "successfully signedup" });
+    return res.send("Success");
   } catch (e) {
-      return res.send(e.message);
+      return res.send(e);
   }
 });
 
 userRouter.post("/login", async (req, res) => {
+   const { email, password } = req.body;
   try {
-    const { email, password } = req.body;
-    let user = await UserModel.findOne({ email });
-    if (user) {
-      let hashed_password = user.password;
-      // bycrypt.compare(password, hashed_password, function (err, result) {
-      if (hashed_password == password) {
-        const token = jwt.sign({ userID: user._id }, "hush");
-        res.send({ msg: "success", token: token });
+    const user = await UserModel.findOne({ email });
+    const verify = bcrypt.compareSync(password,user.password);
+    if (verify) {
+       const token = await jwt.sign({email},"secret");
+       return res.send({token:token,success:1})
       } else {
-        res.send({ msg: "incorrect password" });
+        return res.send("Invalid Username or Password");
       }
-      // });
-    } else {
-      res.send({ msg: "email not resgisterd" });
-    }
   } catch (e) {
-    res.send(e.message);
+      return res.send(e.message);
   }
 });
 module.exports = userRouter;
